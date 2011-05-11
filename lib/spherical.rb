@@ -23,6 +23,8 @@
 BASEPATH = File.dirname(__FILE__)
 $: << File.join(BASEPATH, 'spherical')
 
+require 'rubygems'
+
 require 'savon'
 require 'xmlsimple'
 require 'builder'
