@@ -21,22 +21,22 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
-  # The ServiceInstance class is a root/top-level class representitive of the 
+
+  # The ServiceInstance class is a root/top-level class representitive of the
   # details of a connection with a client.
-  
+
   class Task < ManagedReference
-    
+
     represent_managed :Task  # represent MOR ServiceInstance
-    
+
     attr_reader :about
-    
-    # Block until task is complete. Note that this will function will 
+
+    # Block until task is complete. Note that this will function will
     # poll the server continuously awaiting completion.
     def complete!
       wait_for_update('info.state'){ %w(success error).member? info.state }
     end
-    
+
   end
-  
+
 end

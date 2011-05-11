@@ -21,29 +21,29 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
-  # Absolute path to the vim.wsdl file, which Savon uses to determine 
+
+  # Absolute path to the vim.wsdl file, which Savon uses to determine
   # valid requests (to some extent).
   WSDL_PATH = File.join(File.dirname(__FILE__), '/vim.wsdl')
-  
+
   # Hash of coercion functions for converting XSD types to native Ruby types
   XSD_NATIVE_COERCIONS = {'xsd:string' => lambda{|id| id.to_s },
                           'xsd:boolean' => lambda{|id| !!(id =~ /^true$/i) },
                           'xsd:datetime' => lambda{|id| Time.parse(id) },
                           'xsd:decimal' => lambda{|id| id.to_f }}
-  
+
   # SOAP namespace descriptor
   SOAP_NS = {'xmlns:xsd' => "http://www.w3.org/2001/XMLSchema",
-             'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance", 
+             'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
              'xmlns:env' => "http://schemas.xmlsoap.org/soap/envelope/",
              'xmlns:vim25' => "urn:vim25"}
-  
+
   # Hash describing a full traversal across all traversable objects
   FULL_PROP_TRAVERSAL = {
    'visitFolders' => {:type => 'Folder',
                       :path => 'childEntity',
                       :skip => false,
-                      :select => ['visitFolders', 'dcToHf', 'dcToVmf', 
+                      :select => ['visitFolders', 'dcToHf', 'dcToVmf',
                                   'crToH', 'crToRp', 'HToVm', 'rpToVm']},
         'dcToVmf' => {:type => 'Datacenter',
                       :path => 'vmFolder',
@@ -71,5 +71,5 @@ module Spherical
          'rpToVm' => {:type => 'ResourcePool',
                       :path => 'vm',
                       :skip => false}}
-  
+
 end

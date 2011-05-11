@@ -21,23 +21,23 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
-  # The ServiceInstance class is a root/top-level class representitive of the 
+
+  # The ServiceInstance class is a root/top-level class representitive of the
   # details of a connection with a client.
-  
+
   class ServiceInstance < ManagedReference
-    
+
     represent_managed :ServiceInstance  # represent MOR ServiceInstance
     include ContentMethodInheritance    # inherit methods from @content
-    
+
     attr_reader :about
-    
+
     def initialize(*opts)
       super(*opts)
       @content = retrieve_service_content
       @about = @content.about._hash
     end
-    
+
     def find_datacenter(path = nil)
       unless path.nil?
         root_folder.traverse path, Spherical::Datacenter
@@ -45,7 +45,7 @@ module Spherical
         root_folder.children.grep(Spherical::Datacenter).first
       end
     end
-    
+
   end
-  
+
 end

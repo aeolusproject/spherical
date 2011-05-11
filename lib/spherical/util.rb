@@ -21,20 +21,20 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
+
   # Require all files according to +matcher+ (a glob-matching pattern). See
   # http://ruby-doc.org/core/classes/Dir.html#M000629 for more information.6
   def require_all(matcher)
     Dir.glob(matcher).each{|file| require file }
   end
-  
+
   module_function :require_all
-  
+
 end
 
 class String
   # Some methods imported from ActiveSupport gem, inflector.rb
-  
+
   def underscore
     to_s.gsub(/::/, '/').
     gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
@@ -54,7 +54,7 @@ class String
 end
 
 class OpenStruct
-  
+
   # Hack to allow us to read the table directly.
   attr_reader :table
 
@@ -65,7 +65,7 @@ class Hash
   # Recursively merge with other_hash in place.
   # source:: http://gist.github.com/gists/6391/
   def rmerge!(other_hash)
-    merge!(other_hash) do |key, oldval, newval| 
+    merge!(other_hash) do |key, oldval, newval|
         oldval.class == self.class ? oldval.rmerge!(newval) : newval
     end
   end
@@ -74,12 +74,12 @@ class Hash
   # source:: http://gist.github.com/gists/6391/
   def rmerge(other_hash)
     r = {}
-    merge(other_hash) do |key, oldval, newval| 
+    merge(other_hash) do |key, oldval, newval|
       r[key] = oldval.class == self.class ? oldval.rmerge(newval) : newval
     end
   end
 
-  # Peform breadth-first recursive map of hash. 
+  # Peform breadth-first recursive map of hash.
   def rmap(&block)
     r = {}
     each do |k, v|
@@ -89,13 +89,13 @@ class Hash
     end
     return r
   end
-  
+
   def path_exists?(*path)
     path.inject(self) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
     end
   end
-  
+
   # Perform a deep recursion through the hash, finding the first +key+.
   # For example:
   #
@@ -109,8 +109,8 @@ class Hash
     end
   end
 
-  # Remove the key and value from the hash, and return the value. If the key 
-  # does not exist, optionally return +value+. Return nil if +value+ is 
+  # Remove the key and value from the hash, and return the value. If the key
+  # does not exist, optionally return +value+. Return nil if +value+ is
   # unspecified.
   def pull(key, value = nil)
     if include? key
@@ -119,9 +119,9 @@ class Hash
     end
     return value
   end
-  
-  # Convert the hash to an OpenStruct instance. Adds a method to the 
-  # resulting OpenStruct called +_hash+ that provides access to the original 
+
+  # Convert the hash to an OpenStruct instance. Adds a method to the
+  # resulting OpenStruct called +_hash+ that provides access to the original
   # hash that was converted.
   def to_ostruct(klass = OpenStruct, cch = {})
     cch[self] = (os = klass.new)
@@ -135,4 +135,3 @@ class Hash
   end
 
 end
-  

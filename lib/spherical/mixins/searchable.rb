@@ -21,50 +21,50 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
+
   module Searchable
-    
+
     def self.included(base)
       base.send :extend, ClassMethods
       base.send :include, InstanceMethods
     end
-    
+
     module ClassMethods
-      
+
     end
-    
+
     module InstanceMethods
-      
+
       def find_by_name(name, type = Object)
         @host.service.search_index.find_child(:entity => self, :name => name)
       end
 
       def find_by_hostname(hostname, filters = {}, type = Spherical::VirtualMachine)
         @host.service.search_index.find_by_dns_name({
-          :entity => self, 
-          :dnsName => hostname, 
+          :entity => self,
+          :dnsName => hostname,
           :vmSearch => type == Spherical::VirtualMachine
         }.merge(filters))
       end
 
       def find_by_ip(address, filters = {}, type = Spherical::VirtualMachine)
         @host.service.search_index.find_by_dns_name({
-          :entity => self, 
-          :ip => address, 
+          :entity => self,
+          :ip => address,
           :vmSearch => type == Spherical::VirtualMachine
         }.merge(filters))
       end
 
       def find_by_uuid(uuid, filters = {}, type = Spherical::VirtualMachine)
         @host.service.search_index.find_by_uuid({
-          :entity => self, 
-          :uuid => uuid, :instanceUuid => false, 
+          :entity => self,
+          :uuid => uuid, :instanceUuid => false,
           :vmSearch => type == Spherical::VirtualMachine
         }.merge(filters))
       end
-      
+
     end
-    
+
   end
-  
+
 end

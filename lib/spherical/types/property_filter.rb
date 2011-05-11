@@ -21,18 +21,18 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
-  # The ServiceInstance class is a root/top-level class representitive of the 
+
+  # The ServiceInstance class is a root/top-level class representitive of the
   # details of a connection with a client.
-  
+
   class PropertyFilter < ManagedReference
-    
+
     represent_managed :PropertyFilter  # represent MOR ServiceInstance
-    
+
     def destroy
       destory_property_filter
     end
-    
+
   end
-  
+
 end
