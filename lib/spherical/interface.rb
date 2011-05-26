@@ -110,8 +110,7 @@ module Spherical
     # Perform a request on the API endpoint using SOAP protocol. Accepts the
     # following arguments:
     #
-    # +sym+:: Remote method name as a symbol converted to underscore format
-    #         rather than camelCase.
+    # +sym+::    Remote method name as a camelcased symbol
     # +params+:: Request parameters which will be coerced to XML
     #            using the coerce_to_xml method.
     # +&block+:: An optional block which allows you to build requests by
