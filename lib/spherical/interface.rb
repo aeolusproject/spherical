@@ -39,6 +39,7 @@ module Spherical
         wsdl.namespace = 'urn:vim25'
         http.auth.ssl.verify_mode = :none # no local issuer cert support
       end
+      @args = args_from_wsdl
     end
 
     # Determine if +sym+ can be invoked on the remote interface. Returns boolean.
@@ -73,8 +74,11 @@ module Spherical
     #   <tt>{:name => ['ken', 'tigger']}</tt> becomes
     #   <tt><vim25:name>ken</vim25:name><vim25:name>tigger</vim25:name></tt>
     def coerce_to_xml(xml, params)
-      return nil if params.empty?
-      params.each do |key, val|
+      keys = @args[params[:method!]] || params[:order!] || params.keys
+      keys.each do |key|
+        # Don't add optional parameters with no value
+        next unless params.has_key?(key)
+        val = params[key]
 
         case
         when val.kind_of?(ManagedReference)
@@ -133,7 +137,7 @@ module Spherical
           xml.env(:Envelope, Spherical::SOAP_NS){
             xml.env(:Body){
               xml.vim25(sym){
-                coerce_to_xml(xml, params)
+                coerce_to_xml(xml, params.merge( :method! => sym ))
                 block.call(xml, soap, wsdl, http, wsse) if block_given?
               } # method call
             } # env :Body
@@ -191,6 +195,20 @@ module Spherical
       ManagedReference.build(@host, type.to_sym, options['content'], options)
     end
 
+    # Extract information about the order of arguments from WSDL
+    def args_from_wsdl
+      args = {}
+      doc = Nokogiri::XML(@client.wsdl.document)
+      types = doc.xpath("ws:definitions/ws:types/s:schema",
+                        "ws" => "http://schemas.xmlsoap.org/wsdl/",
+                        "s" => "http://www.w3.org/2001/XMLSchema").first
+      @client.wsdl.operations.each do |name, op|
+        name = name.to_s.camelize.to_sym
+        args[name] = types.xpath("s:element[@name='#{op[:input]}']/s:complexType/s:sequence/s:element/@name",
+                                 "s" => "http://www.w3.org/2001/XMLSchema").map { |a| a.text }.map { |a| a == "_this" ? a = :this! : a.to_sym }
+      end
+      args
+    end
   end
 
 end
