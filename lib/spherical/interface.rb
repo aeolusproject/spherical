@@ -135,7 +135,7 @@ module Spherical
       response = @client.request(:vim25, sym) do |soap, wsdl, http, wsse|
         soap.xml do |xml|
           xml.env(:Envelope, Spherical::SOAP_NS){
-            xml.env(:Body){
+            xml.env(:Body, :xmlns => "urn:vim25"){
               xml.vim25(sym){
                 coerce_to_xml(xml, params.merge( :method! => sym ))
                 block.call(xml, soap, wsdl, http, wsse) if block_given?
