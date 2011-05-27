@@ -31,7 +31,7 @@ module Spherical
 
     def children_for_object(obj, match_type, attrs = ['name', 'parent'], &block)
       type = match_type.kind_of?(ManagedReference) ? match_type.type.to_s : match_type.to_s
-      results = retrieve_properties do |xml|
+      results = retrieve_properties do |xml, *ignored|
         xml.vim25(:specSet, 'xsi:type' => 'PropertyFilterSpec'){
           # specify properties to select for each object returned
           xml.propSet{
@@ -80,10 +80,10 @@ module Spherical
       unless obj.kind_of?(ManagedReference)
         raise TypeError.new("Invalid object #{obj}. Must be a ManagedReference.")
       end
-      results = retrieve_properties do |xml|
-        xml.vim25(:specSet, 'vim25:type' => 'PropertyFilterSpec'){
+      results = retrieve_properties do |xml, *ignored|
+        xml.specSet('type' => 'PropertyFilterSpec'){
           # specify properties to select for each object returned
-          xml.propSet{
+          xml.propSet {
             xml.type obj.type.to_s
             (props == :all) ? xml.all(true) : props.each{|p| xml.pathSet p }
           }
