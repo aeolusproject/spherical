@@ -223,7 +223,8 @@ module Spherical
       @host.service.property_collector.get_object_properties(self, [key])[key]
     end
 
-    # Get the value of multiple properties from the server.
+    # Get the value of multiple properties from the server. When called
+    # with no arguments, retrieves all properties
     def collect(*props)
       @host.service.property_collector.get_object_properties(self, props)
     end

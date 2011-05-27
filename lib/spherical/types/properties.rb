@@ -80,6 +80,7 @@ module Spherical
       unless obj.kind_of?(ManagedReference)
         raise TypeError.new("Invalid object #{obj}. Must be a ManagedReference.")
       end
+      props = :all if props.empty?
       results = retrieve_properties do |xml, *ignored|
         xml.specSet('type' => 'PropertyFilterSpec'){
           # specify properties to select for each object returned

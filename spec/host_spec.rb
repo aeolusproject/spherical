@@ -16,6 +16,11 @@ describe Spherical::Host do
       @host.datacenters.should be_instance_of(Array)
     end
 
+    it "should have folder properties" do
+      dc = @host.datacenters.first
+      dc.collect.should include("hostFolder", "vmFolder", "permission")
+    end
+
     it 'should list inventory' do
       @host.datacenters.each do |dc|
         dc.instances.each do |child|
