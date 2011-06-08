@@ -30,7 +30,10 @@ module Spherical
 
     include Searchable # allow Datacenters to be searched
 
-    def inventory
+    # Produce a flat array of +:VirtualMachine+ objects containing all
+    # virtual machines from the +vmFolder+, regardless of where in the
+    # folder hierarchy they are.
+    def instances
       vm_folder.children_of_type(:VirtualMachine)
     end
 
