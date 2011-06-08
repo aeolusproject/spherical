@@ -155,6 +155,11 @@ module Spherical
       end
     end
 
+    # Don't dump everything
+    def inspect
+      "#<#{self.class.name}>"
+    end
+
     #######
     private
     #######
