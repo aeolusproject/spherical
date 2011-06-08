@@ -15,6 +15,12 @@ When installing Spherical, the following gems will be installed automatically if
 * xmlsimple -- a robust XML parsing library that converts even complex XML to simple native data structures.
 * rspec -- spec testing support
 
+== Logging
+
+Logging of SOAP requests can be turned on or off by setting the environment
+variable SPHERICAL_LOGGING to a log level (one of the log levels supported
+by Logger, i.e. FATAL, ERROR, WARN, INFO or DEBUG)
+
 == RDoc Documentation
 
 See the auto-generated documentation[http://rubydoc.info/github/kenkeiter/spherical/]

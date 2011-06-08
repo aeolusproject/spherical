@@ -40,5 +40,8 @@ Spherical.require_all File.join(BASEPATH, 'spherical/mixins/*.rb')
 Spherical.require_all File.join(BASEPATH, 'spherical/types/*.rb')
 
 Savon.configure do |config|
-  config.log = false
+  logging = ENV["SPHERICAL_LOGGING"]
+  config.log = !!logging
+  config.log_level = logging.downcase.to_sym if logging
+  HTTPI.log = !!logging
 end
