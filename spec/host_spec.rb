@@ -21,11 +21,11 @@ describe Spherical::Host do
       dc.collect.should include("hostFolder", "vmFolder", "permission")
     end
 
-    it 'should list inventory' do
+    it 'should list instances' do
       @host.datacenters.each do |dc|
         dc.instances.each do |child|
-          puts "-----> #{child.guest_full_name}"
-          puts "       #{child.mac_addresses}"
+          child.type.should == :VirtualMachine
+          child.mac_addresses.should_not be_nil
         end
       end
     end
