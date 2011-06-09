@@ -1,0 +1,45 @@
+#! /usr/bin/ruby
+
+irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
+
+require 'optparse'
+require 'yaml'
+
+# The access details for the vsphere instance can be stored in a YAML file;
+# the location of hte file can be passed in through the --config option or
+# through the SPHERICAL_CONFIG env var
+#
+# The YAML file must have this format:
+#   ---
+#   :vsphere:
+#     :provider: API_URL
+#     :user: USERNAME
+#     :password: PASSWORD
+
+options = { :irb => irb, :config => ENV["SPHERICAL_CONFIG"] }
+OptionParser.new do |opt|
+  opt.banner = "Usage: console [options]"
+  opt.on("--irb=[#{irb}]", 'Invoke a different irb.') { |v| options[:irb] = v }
+  opt.on("-c", "--config=[FILE]", 'Location of spherical config file') { |v| options[:config] = v }
+  opt.on("--api=[URL]", 'URL of the SOAP endpoint') { |v| options[:api] = v }
+  opt.on("-u", "--user=[USER]", 'Username') { |v| options[:user] = v }
+  opt.on("-p", "--password=[PASSWORD]", 'Password') { |v| options[:password] = v }
+  opt.parse!(ARGV)
+end
+
+cfg = {}
+if options[:config]
+  file = File::expand_path(ENV["SPHERICAL_CONFIG"])
+  cfg = YAML::load(File::read(file))[:vsphere]
+end
+
+# FIXME: it's bad to pass the password through the env
+ENV["SPHERICAL_API"] =  options[:api] || cfg[:provider]
+ENV["SPHERICAL_USER"] =  options[:user] || cfg[:user]
+ENV["SPHERICAL_PASSWORD"] = options[:password] || cfg[:password]
+
+libs =  " -r irb/completion"
+libs << " -I #{File.join(File.dirname(__FILE__), '../lib')}"
+libs << " -r spherical/console"
+
+exec "#{options[:irb]} #{libs} --simple-prompt"
