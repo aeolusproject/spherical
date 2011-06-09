@@ -19,6 +19,7 @@ describe Spherical::Host do
     it "should have folder properties" do
       dc = @host.datacenters.first
       dc.collect.should include("hostFolder", "vmFolder", "permission")
+      dc.config_status.id.should be_instance_of(String)
     end
 
     it 'should list instances' do
@@ -30,6 +31,11 @@ describe Spherical::Host do
       end
     end
 
+    it 'should have a datastore' do
+      @host.datacenters.each do |dc|
+        pp dc.datastore.size
+      end
+    end
   end
 
 end

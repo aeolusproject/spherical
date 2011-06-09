@@ -27,6 +27,7 @@ module Spherical
     represent_managed :Datacenter
     property_reader 'vmFolder'
     property_reader 'datastore'
+    property_reader 'configStatus'
 
     include Searchable # allow Datacenters to be searched
 
