@@ -21,17 +21,17 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
-  # The ServiceInstance class is a root/top-level class representitive of the 
+
+  # The ServiceInstance class is a root/top-level class representitive of the
   # details of a connection with a client.
-  
+
   class PropertyCollector < ManagedReference
-    
+
     represent_managed :PropertyCollector
-    
-    def children_for_object(obj, match_type, attrs = ['name', 'parent'], &block)      
+
+    def children_for_object(obj, match_type, attrs = ['name', 'parent'], &block)
       type = match_type.kind_of?(ManagedReference) ? match_type.type.to_s : match_type.to_s
-      results = retrieve_properties do |xml|
+      results = retrieve_properties do |xml, *ignored|
         xml.vim25(:specSet, 'xsi:type' => 'PropertyFilterSpec'){
           # specify properties to select for each object returned
           xml.propSet{
@@ -61,7 +61,7 @@ module Spherical
           }
         }
       end
-      
+
       structure = []
       obj_results = results.kind_of?(Array) ? results : [results] # if multiple results
       obj_results.each do |obj_result|
@@ -71,28 +71,29 @@ module Spherical
         yield final_obj if block_given?
         structure << final_obj
       end
-      
+
       return structure
-      
+
     end
-    
+
     def get_object_properties(obj, props)
       unless obj.kind_of?(ManagedReference)
         raise TypeError.new("Invalid object #{obj}. Must be a ManagedReference.")
       end
-      results = retrieve_properties do |xml|
-        xml.vim25(:specSet, 'vim25:type' => 'PropertyFilterSpec'){
+      props = :all if props.empty?
+      results = retrieve_properties do |xml, *ignored|
+        xml.specSet('type' => 'PropertyFilterSpec'){
           # specify properties to select for each object returned
-          xml.propSet{
+          xml.propSet {
             xml.type obj.type.to_s
             (props == :all) ? xml.all(true) : props.each{|p| xml.pathSet p }
           }
           xml.objectSet{ @host.api.coerce_to_xml(xml, :obj => obj) } # target obj
         }
       end
-      
+
       raise "Unable to retrieve #{props} for #{obj}." unless results._hash
-      
+
       structure = {}
       obj_results = results._hash.kind_of?(Array) ? results : [results] # if multiple results
       obj_results.each do |obj_result|
@@ -100,11 +101,11 @@ module Spherical
         prop_set = Hash[prop_set.map{ |p| [p['name'], p['val']] }]
         structure.merge!(prop_set)
       end
-      
+
       return structure
-      
+
     end
-    
+
   end
-  
+
 end

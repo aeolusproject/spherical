@@ -21,19 +21,19 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
+
   class Folder < ManagedReference
-    
+
     represent_managed :Folder
     include Searchable # allow Folders to be searched
     include Traversable # this entity has children
-    
-    # Create a new folder beneath this one. Return a ManagedReference to 
+
+    # Create a new folder beneath this one. Return a ManagedReference to
     # the new folder.
     def create_subfolder(name)
       create_folder(:name => name)
     end
-    
+
     def traverse(path, type = Object, create = false)
       elements = path.kind_of?(String) ? path.split('/').reject(&:empty?) : path
       return self if elements.empty?
@@ -49,7 +49,7 @@ module Spherical
         nil
       end
     end
-     
+
   end
-  
+
 end

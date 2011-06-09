@@ -21,27 +21,27 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
+
   module ContentMethodInheritance
-    
+
     def self.included(base)
       base.send :extend, ClassMethods
       base.send :include, InstanceMethods
     end
-    
+
     module ClassMethods
-      
+
     end
-    
+
     module InstanceMethods
-      
+
       def method_missing(sym, *opts, &block)
         return @content.send(sym) if @content.respond_to? sym
         super(sym, *opts, &block)
       end
-      
+
     end
-    
+
   end
-  
+
 end

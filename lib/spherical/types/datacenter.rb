@@ -21,19 +21,23 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
+
   class Datacenter < ManagedReference
-    
+
     represent_managed :Datacenter
     property_reader 'vmFolder'
     property_reader 'datastore'
-    
+    property_reader 'configStatus'
+
     include Searchable # allow Datacenters to be searched
-    
-    def inventory
+
+    # Produce a flat array of +:VirtualMachine+ objects containing all
+    # virtual machines from the +vmFolder+, regardless of where in the
+    # folder hierarchy they are.
+    def instances
       vm_folder.children_of_type(:VirtualMachine)
     end
-    
+
   end
-  
+
 end

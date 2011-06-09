@@ -21,32 +21,32 @@
 # License:: Distributed under GPLv2
 
 module Spherical
-  
+
   module Traversable
-    
+
     def self.included(base)
       base.send :extend, ClassMethods
       base.send :include, InstanceMethods
     end
-    
+
     module ClassMethods
-      
+
     end
-    
+
     module InstanceMethods
-      
+
       def each(type, &block)
         @host.service.property_collector.children_for_object(self, type)
       end
-      
-      # Find all children of the baseclass. The baseclass's server-side 
+
+      # Find all children of the baseclass. The baseclass's server-side
       # managed object must have a childEntity property for this to work.
       def children_of_type(*args)
         @host.service.property_collector.children_for_object(self, *args)
       end
-      
+
     end
-    
+
   end
-  
+
 end
